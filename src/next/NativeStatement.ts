@@ -44,10 +44,15 @@ export interface SQLiteRunResult {
  * ```
  */
 export type SQLiteBindValue = string | number | null | boolean | Uint8Array;
-export type SQLiteBindParams = Record<string, SQLiteBindValue> | SQLiteBindValue[];
+export type SQLiteBindParams =
+  | Record<string, SQLiteBindValue>
+  | SQLiteBindValue[];
 export type SQLiteVariadicBindParams = SQLiteBindValue[];
 
-export type SQLiteBindPrimitiveParams = Record<string, Exclude<SQLiteBindValue, Uint8Array>>;
+export type SQLiteBindPrimitiveParams = Record<
+  string,
+  Exclude<SQLiteBindValue, Uint8Array>
+>;
 export type SQLiteBindBlobParams = Record<string, Uint8Array>;
 export type SQLiteColumnNames = string[];
 export type SQLiteColumnValues = any[];
@@ -65,8 +70,12 @@ export declare class NativeStatement {
     bindBlobParams: SQLiteBindBlobParams,
     shouldPassAsArray: boolean
   ): Promise<SQLiteRunResult & { firstRowValues: SQLiteColumnValues }>;
-  public stepAsync(database: SQLiteAnyDatabase): Promise<SQLiteColumnValues | null | undefined>;
-  public getAllAsync(database: SQLiteAnyDatabase): Promise<SQLiteColumnValues[]>;
+  public stepAsync(
+    database: SQLiteAnyDatabase
+  ): Promise<SQLiteColumnValues | null | undefined>;
+  public getAllAsync(
+    database: SQLiteAnyDatabase
+  ): Promise<SQLiteColumnValues[]>;
   public resetAsync(database: SQLiteAnyDatabase): Promise<void>;
   public getColumnNamesAsync(): Promise<SQLiteColumnNames>;
   public finalizeAsync(database: SQLiteAnyDatabase): Promise<void>;
@@ -81,7 +90,9 @@ export declare class NativeStatement {
     bindBlobParams: SQLiteBindBlobParams,
     shouldPassAsArray: boolean
   ): SQLiteRunResult & { firstRowValues: SQLiteColumnValues };
-  public stepSync(database: SQLiteAnyDatabase): SQLiteColumnValues | null | undefined;
+  public stepSync(
+    database: SQLiteAnyDatabase
+  ): SQLiteColumnValues | null | undefined;
   public getAllSync(database: SQLiteAnyDatabase): SQLiteColumnValues[];
   public resetSync(database: SQLiteAnyDatabase): void;
   public getColumnNamesSync(): string[];

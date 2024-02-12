@@ -1,18 +1,20 @@
-import { NativeStatement } from './NativeStatement';
+import { NativeStatement } from "./NativeStatement";
 
 /**
  * A class that represents an instance of the SQLite database.
  */
 export declare class NativeDatabase {
   constructor(databaseName: string, options?: SQLiteOpenOptions);
-
   //#region Asynchronous API
 
   public initAsync(): Promise<void>;
   public isInTransactionAsync(): Promise<boolean>;
   public closeAsync(): Promise<void>;
   public execAsync(source: string): Promise<void>;
-  public prepareAsync(nativeStatement: NativeStatement, source: string): Promise<NativeStatement>;
+  public prepareAsync(
+    nativeStatement: NativeStatement,
+    source: string
+  ): Promise<NativeStatement>;
 
   //#endregion
 
@@ -22,7 +24,10 @@ export declare class NativeDatabase {
   public isInTransactionSync(): boolean;
   public closeSync(): void;
   public execSync(source: string): void;
-  public prepareSync(nativeStatement: NativeStatement, source: string): NativeStatement;
+  public prepareSync(
+    nativeStatement: NativeStatement,
+    source: string
+  ): NativeStatement;
 
   //#endregion
 }

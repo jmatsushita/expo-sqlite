@@ -36,16 +36,21 @@
     "preset": "expo-module-scripts"
   },
   "dependencies": {
-    "@expo/websql": "^1.0.1"
+    "@expo/websql": "^1.0.1",
+    "@vlcn.io/crsqlite-wasm": "0.16.0",
+    "async-mutex": "0.4.1",
+    "wa-sqlite": "^1.0.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.6",
     "better-sqlite3": "^9.0.0",
     "expo-module-scripts": "^3.0.0",
-    "react-error-boundary": "^4.0.11"
+    "expo-modules-core": "1.11.5",
+    "react-error-boundary": "^4.0.11",
+    "react-native": "0.73.2"
   },
   "peerDependencies": {
     "expo": "*"
   },
-  "gitHead": "ba36acbbe93bac3114612bd578619de9663c2a16"
+  "gitHead": "ca014bf2516c7644ef303f4c21fdd68de4d99f76"
 }

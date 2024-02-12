@@ -1,7 +1,7 @@
-import { EventEmitter, Subscription } from 'expo-modules-core';
+import { EventEmitter, Subscription } from "expo-modules-core";
 
-import ExpoSQLite from './ExpoSQLiteNext';
-import { NativeDatabase, SQLiteOpenOptions } from './NativeDatabase';
+import ExpoSQLite from "./ExpoSQLiteNext";
+import { NativeDatabase, SQLiteOpenOptions } from "./NativeDatabase";
 import {
   SQLiteBindParams,
   SQLiteExecuteAsyncResult,
@@ -9,7 +9,7 @@ import {
   SQLiteRunResult,
   SQLiteStatement,
   SQLiteVariadicBindParams,
-} from './SQLiteStatement';
+} from "./SQLiteStatement";
 
 export { SQLiteOpenOptions };
 
@@ -55,8 +55,17 @@ export class SQLiteDatabase {
    * @param source A string containing the SQL query.
    */
   public async prepareAsync(source: string): Promise<SQLiteStatement> {
+    // console.log("SQLiteDatabase.prepareAsync.source", source);
     const nativeStatement = new ExpoSQLite.NativeStatement();
+    // console.log(
+    //   "SQLiteDatabase.prepareAsync.nativeStatement",
+    //   JSON.stringify(nativeStatement)
+    // );
     await this.nativeDatabase.prepareAsync(nativeStatement, source);
+    // console.log(
+    //   "SQLiteDatabase.prepareAsync after nativeStatement",
+    //   JSON.stringify(nativeStatement)
+    // );
     return new SQLiteStatement(this.nativeDatabase, nativeStatement);
   }
 
@@ -85,11 +94,11 @@ export class SQLiteDatabase {
    */
   public async withTransactionAsync(task: () => Promise<void>): Promise<void> {
     try {
-      await this.execAsync('BEGIN');
+      await this.execAsync("BEGIN");
       await task();
-      await this.execAsync('COMMIT');
+      await this.execAsync("COMMIT");
     } catch (e) {
-      await this.execAsync('ROLLBACK');
+      await this.execAsync("ROLLBACK");
       throw e;
     }
   }
@@ -117,11 +126,11 @@ export class SQLiteDatabase {
     const transaction = await Transaction.createAsync(this);
     let error;
     try {
-      await transaction.execAsync('BEGIN');
+      await transaction.execAsync("BEGIN");
       await task(transaction);
-      await transaction.execAsync('COMMIT');
+      await transaction.execAsync("COMMIT");
     } catch (e) {
-      await transaction.execAsync('ROLLBACK');
+      await transaction.execAsync("ROLLBACK");
       error = e;
     } finally {
       await transaction.closeAsync();
@@ -180,11 +189,11 @@ export class SQLiteDatabase {
    */
   public withTransactionSync(task: () => void): void {
     try {
-      this.execSync('BEGIN');
+      this.execSync("BEGIN");
       task();
-      this.execSync('COMMIT');
+      this.execSync("COMMIT");
     } catch (e) {
-      this.execSync('ROLLBACK');
+      this.execSync("ROLLBACK");
       throw e;
     }
   }
@@ -196,13 +205,22 @@ export class SQLiteDatabase {
    * @param source A string containing the SQL query.
    * @param params The parameters to bind to the prepared statement. You can pass values in array, object, or variadic arguments. See [`SQLiteBindValue`](#sqlitebindvalue) for more information about binding values.
    */
-  public runAsync(source: string, params: SQLiteBindParams): Promise<SQLiteRunResult>;
+  public runAsync(
+    source: string,
+    params: SQLiteBindParams
+  ): Promise<SQLiteRunResult>;
 
   /**
    * @hidden
    */
-  public runAsync(source: string, ...params: SQLiteVariadicBindParams): Promise<SQLiteRunResult>;
-  public async runAsync(source: string, ...params: any[]): Promise<SQLiteRunResult> {
+  public runAsync(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): Promise<SQLiteRunResult>;
+  public async runAsync(
+    source: string,
+    ...params: any[]
+  ): Promise<SQLiteRunResult> {
     const statement = await this.prepareAsync(source);
     let result: SQLiteExecuteAsyncResult<unknown>;
     try {
@@ -218,12 +236,21 @@ export class SQLiteDatabase {
    * @param source A string containing the SQL query.
    * @param params The parameters to bind to the prepared statement. You can pass values in array, object, or variadic arguments. See [`SQLiteBindValue`](#sqlitebindvalue) for more information about binding values.
    */
-  public getFirstAsync<T>(source: string, params: SQLiteBindParams): Promise<T | null>;
+  public getFirstAsync<T>(
+    source: string,
+    params: SQLiteBindParams
+  ): Promise<T | null>;
   /**
    * @hidden
    */
-  public getFirstAsync<T>(source: string, ...params: SQLiteVariadicBindParams): Promise<T | null>;
-  public async getFirstAsync<T>(source: string, ...params: any[]): Promise<T | null> {
+  public getFirstAsync<T>(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): Promise<T | null>;
+  public async getFirstAsync<T>(
+    source: string,
+    ...params: any[]
+  ): Promise<T | null> {
     const statement = await this.prepareAsync(source);
     let firstRow: T | null;
     try {
@@ -241,7 +268,10 @@ export class SQLiteDatabase {
    * @param params The parameters to bind to the prepared statement. You can pass values in array, object, or variadic arguments. See [`SQLiteBindValue`](#sqlitebindvalue) for more information about binding values.
    * @returns Rather than returning Promise, this function returns an [`AsyncIterableIterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncIterator). You can use `for await...of` to iterate over the rows from the SQLite query result.
    */
-  public getEachAsync<T>(source: string, params: SQLiteBindParams): AsyncIterableIterator<T>;
+  public getEachAsync<T>(
+    source: string,
+    params: SQLiteBindParams
+  ): AsyncIterableIterator<T>;
   /**
    * @hidden
    */
@@ -249,7 +279,10 @@ export class SQLiteDatabase {
     source: string,
     ...params: SQLiteVariadicBindParams
   ): AsyncIterableIterator<T>;
-  public async *getEachAsync<T>(source: string, ...params: any[]): AsyncIterableIterator<T> {
+  public async *getEachAsync<T>(
+    source: string,
+    ...params: any[]
+  ): AsyncIterableIterator<T> {
     const statement = await this.prepareAsync(source);
     try {
       const result = await statement.executeAsync<T>(...params);
@@ -281,16 +314,25 @@ export class SQLiteDatabase {
   /**
    * @hidden
    */
-  public getAllAsync<T>(source: string, ...params: SQLiteVariadicBindParams): Promise<T[]>;
+  public getAllAsync<T>(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): Promise<T[]>;
   public async getAllAsync<T>(source: string, ...params: any[]): Promise<T[]> {
     const statement = await this.prepareAsync(source);
+    // console.log(
+    //   "SQLiteDatabase.getAllAsync.statement",
+    //   JSON.stringify(statement)
+    // );
     let allRows;
     try {
       const result = await statement.executeAsync<T>(...params);
       allRows = await result.getAllAsync();
     } finally {
+      // console.log("SQLiteDatabase.getAllAsync.finalizeAsync");
       await statement.finalizeAsync();
     }
+    // console.log("SQLiteDatabase.getAllAsync.allRows", allRows);
     return allRows;
   }
 
@@ -304,7 +346,10 @@ export class SQLiteDatabase {
   /**
    * @hidden
    */
-  public runSync(source: string, ...params: SQLiteVariadicBindParams): SQLiteRunResult;
+  public runSync(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): SQLiteRunResult;
   public runSync(source: string, ...params: any[]): SQLiteRunResult {
     const statement = this.prepareSync(source);
     let result: SQLiteExecuteSyncResult<unknown>;
@@ -326,7 +371,10 @@ export class SQLiteDatabase {
   /**
    * @hidden
    */
-  public getFirstSync<T>(source: string, ...params: SQLiteVariadicBindParams): T | null;
+  public getFirstSync<T>(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): T | null;
   public getFirstSync<T>(source: string, ...params: any[]): T | null {
     const statement = this.prepareSync(source);
     let firstRow: T | null;
@@ -346,12 +394,21 @@ export class SQLiteDatabase {
    * @param params The parameters to bind to the prepared statement. You can pass values in array, object, or variadic arguments. See [`SQLiteBindValue`](#sqlitebindvalue) for more information about binding values.
    * @returns This function returns an [`IterableIterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator). You can use `for...of` to iterate over the rows from the SQLite query result.
    */
-  public getEachSync<T>(source: string, params: SQLiteBindParams): IterableIterator<T>;
+  public getEachSync<T>(
+    source: string,
+    params: SQLiteBindParams
+  ): IterableIterator<T>;
   /**
    * @hidden
    */
-  public getEachSync<T>(source: string, ...params: SQLiteVariadicBindParams): IterableIterator<T>;
-  public *getEachSync<T>(source: string, ...params: any[]): IterableIterator<T> {
+  public getEachSync<T>(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): IterableIterator<T>;
+  public *getEachSync<T>(
+    source: string,
+    ...params: any[]
+  ): IterableIterator<T> {
     const statement = this.prepareSync(source);
     try {
       const result = statement.executeSync<T>(...params);
@@ -373,7 +430,10 @@ export class SQLiteDatabase {
   /**
    * @hidden
    */
-  public getAllSync<T>(source: string, ...params: SQLiteVariadicBindParams): T[];
+  public getAllSync<T>(
+    source: string,
+    ...params: SQLiteVariadicBindParams
+  ): T[];
   public getAllSync<T>(source: string, ...params: any[]): T[] {
     const statement = this.prepareSync(source);
     let allRows;
@@ -400,7 +460,10 @@ export async function openDatabaseAsync(
   options?: SQLiteOpenOptions
 ): Promise<SQLiteDatabase> {
   const openOptions = options ?? {};
-  const nativeDatabase = new ExpoSQLite.NativeDatabase(databaseName, openOptions);
+  const nativeDatabase = new ExpoSQLite.NativeDatabase(
+    databaseName,
+    openOptions
+  );
   await nativeDatabase.initAsync();
   return new SQLiteDatabase(databaseName, openOptions, nativeDatabase);
 }
@@ -418,7 +481,10 @@ export function openDatabaseSync(
   options?: SQLiteOpenOptions
 ): SQLiteDatabase {
   const openOptions = options ?? {};
-  const nativeDatabase = new ExpoSQLite.NativeDatabase(databaseName, openOptions);
+  const nativeDatabase = new ExpoSQLite.NativeDatabase(
+    databaseName,
+    openOptions
+  );
   nativeDatabase.initSync();
   return new SQLiteDatabase(databaseName, openOptions, nativeDatabase);
 }
@@ -470,7 +536,7 @@ export type DatabaseChangeEvent = {
 export function addDatabaseChangeListener(
   listener: (event: DatabaseChangeEvent) => void
 ): Subscription {
-  return emitter.addListener('onDatabaseChange', listener);
+  return emitter.addListener("onDatabaseChange", listener);
 }
 
 /**
@@ -480,7 +546,10 @@ export function addDatabaseChangeListener(
 class Transaction extends SQLiteDatabase {
   public static async createAsync(db: SQLiteDatabase): Promise<Transaction> {
     const options = { ...db.options, useNewConnection: true };
-    const nativeDatabase = new ExpoSQLite.NativeDatabase(db.databaseName, options);
+    const nativeDatabase = new ExpoSQLite.NativeDatabase(
+      db.databaseName,
+      options
+    );
     await nativeDatabase.initAsync();
     return new Transaction(db.databaseName, options, nativeDatabase);
   }
