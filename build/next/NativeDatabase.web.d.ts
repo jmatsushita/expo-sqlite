@@ -41,4 +41,4 @@ export interface SQLiteOpenOptions {
      */
     finalizeUnusedStatementsBeforeClosing?: boolean;
 }
-//# sourceMappingURL=NativeDatabase.d.ts.map
+//# sourceMappingURL=NativeDatabase.web.d.ts.map

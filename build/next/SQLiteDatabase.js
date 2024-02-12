@@ -1,6 +1,6 @@
-import { EventEmitter } from 'expo-modules-core';
-import ExpoSQLite from './ExpoSQLiteNext';
-import { SQLiteStatement, } from './SQLiteStatement';
+import { EventEmitter } from "expo-modules-core";
+import ExpoSQLite from "./ExpoSQLiteNext";
+import { SQLiteStatement, } from "./SQLiteStatement";
 const emitter = new EventEmitter(ExpoSQLite);
 /**
  * A SQLite database.
@@ -41,8 +41,17 @@ export class SQLiteDatabase {
      * @param source A string containing the SQL query.
      */
     async prepareAsync(source) {
+        // console.log("SQLiteDatabase.prepareAsync.source", source);
         const nativeStatement = new ExpoSQLite.NativeStatement();
+        // console.log(
+        //   "SQLiteDatabase.prepareAsync.nativeStatement",
+        //   JSON.stringify(nativeStatement)
+        // );
         await this.nativeDatabase.prepareAsync(nativeStatement, source);
+        // console.log(
+        //   "SQLiteDatabase.prepareAsync after nativeStatement",
+        //   JSON.stringify(nativeStatement)
+        // );
         return new SQLiteStatement(this.nativeDatabase, nativeStatement);
     }
     /**
@@ -70,12 +79,12 @@ export class SQLiteDatabase {
      */
     async withTransactionAsync(task) {
         try {
-            await this.execAsync('BEGIN');
+            await this.execAsync("BEGIN");
             await task();
-            await this.execAsync('COMMIT');
+            await this.execAsync("COMMIT");
         }
         catch (e) {
-            await this.execAsync('ROLLBACK');
+            await this.execAsync("ROLLBACK");
             throw e;
         }
     }
@@ -100,12 +109,12 @@ export class SQLiteDatabase {
         const transaction = await Transaction.createAsync(this);
         let error;
         try {
-            await transaction.execAsync('BEGIN');
+            await transaction.execAsync("BEGIN");
             await task(transaction);
-            await transaction.execAsync('COMMIT');
+            await transaction.execAsync("COMMIT");
         }
         catch (e) {
-            await transaction.execAsync('ROLLBACK');
+            await transaction.execAsync("ROLLBACK");
             error = e;
         }
         finally {
@@ -160,12 +169,12 @@ export class SQLiteDatabase {
      */
     withTransactionSync(task) {
         try {
-            this.execSync('BEGIN');
+            this.execSync("BEGIN");
             task();
-            this.execSync('COMMIT');
+            this.execSync("COMMIT");
         }
         catch (e) {
-            this.execSync('ROLLBACK');
+            this.execSync("ROLLBACK");
             throw e;
         }
     }
@@ -206,14 +215,20 @@ export class SQLiteDatabase {
     }
     async getAllAsync(source, ...params) {
         const statement = await this.prepareAsync(source);
+        // console.log(
+        //   "SQLiteDatabase.getAllAsync.statement",
+        //   JSON.stringify(statement)
+        // );
         let allRows;
         try {
             const result = await statement.executeAsync(...params);
             allRows = await result.getAllAsync();
         }
         finally {
+            // console.log("SQLiteDatabase.getAllAsync.finalizeAsync");
             await statement.finalizeAsync();
         }
+        // console.log("SQLiteDatabase.getAllAsync.allRows", allRows);
         return allRows;
     }
     runSync(source, ...params) {
@@ -316,7 +331,7 @@ export function deleteDatabaseSync(databaseName) {
  * @returns A `Subscription` object that you can call `remove()` on when you would like to unsubscribe the listener.
  */
 export function addDatabaseChangeListener(listener) {
-    return emitter.addListener('onDatabaseChange', listener);
+    return emitter.addListener("onDatabaseChange", listener);
 }
 /**
  * A new connection specific used for [`withExclusiveTransactionAsync`](#withexclusivetransactionasynctask).

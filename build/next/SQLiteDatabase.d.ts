@@ -1,6 +1,6 @@
-import { Subscription } from 'expo-modules-core';
-import { NativeDatabase, SQLiteOpenOptions } from './NativeDatabase';
-import { SQLiteBindParams, SQLiteRunResult, SQLiteStatement, SQLiteVariadicBindParams } from './SQLiteStatement';
+import { Subscription } from "expo-modules-core";
+import { NativeDatabase, SQLiteOpenOptions } from "./NativeDatabase";
+import { SQLiteBindParams, SQLiteRunResult, SQLiteStatement, SQLiteVariadicBindParams } from "./SQLiteStatement";
 export { SQLiteOpenOptions };
 /**
  * A SQLite database.

@@ -1,4 +1,4 @@
-import { composeRow, composeRows, normalizeParams } from './paramUtils';
+import { composeRow, composeRows, normalizeParams } from "./paramUtils";
 /**
  * A prepared statement returned by [`SQLiteDatabase.prepareAsync()`](#prepareasyncsource) or [`SQLiteDatabase.prepareSync()`](#preparesyncsource) that can be binded with parameters and executed.
  */
@@ -88,7 +88,12 @@ async function createSQLiteExecuteAsyncResult(database, statement, firstRowValue
             writable: false,
             configurable: true,
         },
-        changes: { value: options.changes, enumerable: true, writable: false, configurable: true },
+        changes: {
+            value: options.changes,
+            enumerable: true,
+            writable: false,
+            configurable: true,
+        },
         getFirstAsync: {
             value: instance.getFirstAsync.bind(instance),
             enumerable: true,
@@ -123,7 +128,12 @@ function createSQLiteExecuteSyncResult(database, statement, firstRowValues, opti
             writable: false,
             configurable: true,
         },
-        changes: { value: options.changes, enumerable: true, writable: false, configurable: true },
+        changes: {
+            value: options.changes,
+            enumerable: true,
+            writable: false,
+            configurable: true,
+        },
         getFirstSync: {
             value: instance.getFirstSync.bind(instance),
             enumerable: true,
@@ -160,7 +170,7 @@ class SQLiteExecuteAsyncResultImpl {
     }
     async getFirstAsync() {
         if (this.isStepCalled) {
-            throw new Error('The SQLite cursor has been shifted and is unable to retrieve the first row without being reset. Invoke `resetAsync()` to reset the cursor first if you want to retrieve the first row.');
+            throw new Error("The SQLite cursor has been shifted and is unable to retrieve the first row without being reset. Invoke `resetAsync()` to reset the cursor first if you want to retrieve the first row.");
         }
         this.isStepCalled = true;
         const columnNames = await this.getColumnNamesAsync();
@@ -175,7 +185,7 @@ class SQLiteExecuteAsyncResultImpl {
     }
     async getAllAsync() {
         if (this.isStepCalled) {
-            throw new Error('The SQLite cursor has been shifted and is unable to retrieve all rows without being reset. Invoke `resetAsync()` to reset the cursor first if you want to retrieve all rows.');
+            throw new Error("The SQLite cursor has been shifted and is unable to retrieve all rows without being reset. Invoke `resetAsync()` to reset the cursor first if you want to retrieve all rows.");
         }
         this.isStepCalled = true;
         const firstRowValues = this.popFirstRowValues();
@@ -243,7 +253,7 @@ class SQLiteExecuteSyncResultImpl {
     }
     getFirstSync() {
         if (this.isStepCalled) {
-            throw new Error('The SQLite cursor has been shifted and is unable to retrieve the first row without being reset. Invoke `resetSync()` to reset the cursor first if you want to retrieve the first row.');
+            throw new Error("The SQLite cursor has been shifted and is unable to retrieve the first row without being reset. Invoke `resetSync()` to reset the cursor first if you want to retrieve the first row.");
         }
         const columnNames = this.getColumnNamesSync();
         const firstRowValues = this.popFirstRowValues();
@@ -257,7 +267,7 @@ class SQLiteExecuteSyncResultImpl {
     }
     getAllSync() {
         if (this.isStepCalled) {
-            throw new Error('The SQLite cursor has been shifted and is unable to retrieve all rows without being reset. Invoke `resetSync()` to reset the cursor first if you want to retrieve all rows.');
+            throw new Error("The SQLite cursor has been shifted and is unable to retrieve all rows without being reset. Invoke `resetSync()` to reset the cursor first if you want to retrieve all rows.");
         }
         const firstRowValues = this.popFirstRowValues();
         if (firstRowValues == null) {

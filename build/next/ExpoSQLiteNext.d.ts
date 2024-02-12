@@ -1,8 +1,7 @@
-import { SQLiteOpenOptions } from './NativeDatabase';
 declare const _default: {
     readonly name: string;
-    NativeDatabase(databaseName: string, options?: SQLiteOpenOptions): void;
-    NativeStatement(): void;
+    NativeDatabase: any;
+    NativeStatement: any;
     deleteDatabaseAsync(databaseName: string): Promise<void>;
     deleteDatabaseSync(databaseName: string): void;
     addListener(): never;
